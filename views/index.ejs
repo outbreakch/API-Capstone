@@ -11,8 +11,19 @@
       <input type="text" name="city" placeholder="Enter city" />
       <button type="submit">Get Weather</button>
     </form>
-    <% if (weather) { %>
-    <h2>Weather: <%= weather %></h2>
+    <% if (locals.forecast) { %>
+    <h2>7-day forecast for <%= city %></h2>
+    <div class="card-container">
+      <% forecast.forEach(day => { %>
+      <div class="weather-card">
+        <h3><%= day.date %></h3>
+        <p>High: <%= day.temp_max %>°C</p>
+        <p>Low: <%= day.temp_min %>°C</p>
+        <p>Precipitation: <%= day.precipitation %> mm</p>
+        <p>Weather code: <%= day.weather_code %></p>
+      </div>
+      <% }) %>
+    </div>
     <% } %> <% if (error) { %>
     <p style="color: red"><%= error %></p>
     <% } %>

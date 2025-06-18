@@ -17,7 +17,7 @@ app.set("views", path.join(__dirname, "views"));
 
 // Home route
 app.get("/", (req, res) => {
-  res.render("index.ejs", { weather: null, error: null });
+  res.render("index", { weather: null, error: null });
 });
 
 //POST route
@@ -53,10 +53,12 @@ app.post("/", async (req, res) => {
     console.log(forecastArray);
     // Pass dailyForecast to your EJS template
     res.render("index", {
-      weather: JSON.stringify(forecastArray),
+      forecast: forecastArray,
+      city: city,
       error: null,
     });
   } catch (error) {
+    console.error(error);
     res.render("index", {
       weather: null,
       error: "City not found or API error.",
