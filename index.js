@@ -2,7 +2,6 @@ import express from "express";
 import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
-import { chown } from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -36,8 +35,27 @@ app.post("/", async (req, res) => {
     let chosenResult = results[0];
     let cityLat = chosenResult.latitude;
     let cityLon = chosenResult.longitude;
-    console.log(cityLat, cityLon);
-    res.render("index", { weather: "Still working on this", error: null });
+
+    // Input Lat and Lon for weather fetch
+    const weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${cityLat}&longitude=${cityLon}&model=gem&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&forecast_days=7&timezone=auto`;
+    const weatherResponse = await axios.get(weatherURL);
+
+    const daily = weatherResponse.data.daily;
+
+    const forecastArray = daily.time.map((date, i) => ({
+      date: date,
+      temp_max: daily.temperature_2m_max[i],
+      temp_min: daily.temperature_2m_min[i],
+      precipitation: daily.precipitation_sum[i],
+      weather_code: daily.weathercode[i],
+    })); // 7-day forecast
+
+    console.log(forecastArray);
+    // Pass dailyForecast to your EJS template
+    res.render("index", {
+      weather: JSON.stringify(forecastArray),
+      error: null,
+    });
   } catch (error) {
     res.render("index", {
       weather: null,
@@ -45,6 +63,7 @@ app.post("/", async (req, res) => {
     });
   }
 });
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
