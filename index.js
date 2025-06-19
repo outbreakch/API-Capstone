@@ -2,6 +2,7 @@ import express from "express";
 import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
+import { getWeatherIconName } from "./weatherIcons.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -48,6 +49,7 @@ app.post("/", async (req, res) => {
       temp_min: daily.temperature_2m_min[i],
       precipitation: daily.precipitation_sum[i],
       weather_code: daily.weathercode[i],
+      icon: getWeatherIconName(daily.weathercode[i], 1),
     })); // 7-day forecast
 
     console.log(forecastArray);

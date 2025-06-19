@@ -16,7 +16,7 @@
     <div class="card-container">
       <% forecast.forEach(day => { %>
       <div class="weather-card">
-        <h3><%= day.date %></h3>
+        <h3><%= day.date %> <i class="material-icons"><%= day.icon %></i></h3>
         <p>High: <%= day.temp_max %>°C</p>
         <p>Low: <%= day.temp_min %>°C</p>
         <p>Precipitation: <%= day.precipitation %> mm</p>
