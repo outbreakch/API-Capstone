@@ -22,3 +22,8 @@
 form {
   position: relative;
 }
+.suggestion-box:empty {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
