@@ -15,7 +15,7 @@
       <input type="text" name="city" placeholder="Enter city" />
       <button type="submit">Get Weather</button>
     </form>
-    <% if (forecast) { %>
+    <% if (locals.forecast) { %>
     <h2>7-day forecast for <b><%= city %></b></h2>
     <div class="forecast-cards">
       <% forecast.forEach(day => { %>

@@ -63,8 +63,30 @@ app.post("/", async (req, res) => {
       return res.render("index", { weather: null, error: "City not found." });
     }
     let chosenResult = results[0];
+    // Capitalize function (to handle 'quebec' -> 'Quebec')
+    function capitalizeWords(str) {
+      if (!str) return "";
+      return str
+        .split(" ")
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" ");
+    }
+
+    const cityName = capitalizeWords(chosenResult.name);
+    const regionName = capitalizeWords(chosenResult.admin1);
+    const countryCode = chosenResult.country_code
+      ? chosenResult.country_code.toUpperCase()
+      : "";
+    const parts = [];
+    if (cityName) parts.push(cityName);
+    if (regionName) parts.push(regionName);
+    if (countryCode) parts.push(countryCode);
+    const displayLocation = parts.join(", ");
     let cityLat = chosenResult.latitude;
     let cityLon = chosenResult.longitude;
+    console.log(chosenResult);
 
     // Input Lat and Lon for weather fetch
     const weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${cityLat}&longitude=${cityLon}&model=gem&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&forecast_days=7&timezone=auto`;
@@ -83,17 +105,15 @@ app.post("/", async (req, res) => {
       )}`,
     })); // 7-day forecast
 
-    console.log(forecastArray);
-    // Pass dailyForecast to your EJS template
     res.render("index", {
       forecast: forecastArray,
-      city: city,
+      city: displayLocation,
       error: null,
     });
   } catch (error) {
     console.error(error);
     res.render("index", {
-      weather: null,
+      forecast: null,
       error: "City not found or API error.",
     });
   }
