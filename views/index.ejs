@@ -1,13 +1,11 @@
+<!--index.ejs-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>API Capstone</title>
     <link rel="stylesheet" href="styles/main.css" />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="styles/suggest.css" />
   </head>
   <body>
     <h1>Weather App Capstone</h1>
@@ -15,7 +13,7 @@
       <input type="text" name="city" placeholder="Enter city" />
       <button type="submit">Get Weather</button>
     </form>
-    <% if (locals.forecast) { %>
+    <% if (forecast) { %>
     <h2>7-day forecast for <b><%= city %></b></h2>
     <div class="forecast-cards">
       <% forecast.forEach(day => { %>
@@ -33,5 +31,6 @@
     <% } %> <% if (error) { %>
     <p style="color: red"><%= error %></p>
     <% } %>
+    <script src="scripts/autocomplete.js"></script>
   </body>
 </html>

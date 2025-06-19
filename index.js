@@ -1,16 +1,20 @@
+//index.js
+
 import express from "express";
 import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getWeatherIconSVG } from "./weatherIcons.js";
+import suggestRoute from "./suggestroute.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-const PORT = 3000;
+const PORT = 5500;
 
 // Middleware to serve static files
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+app.use("/suggest", suggestRoute);
 
 // Set view engine to EJS
 app.set("view engine", "ejs");
@@ -47,7 +51,7 @@ function formatLongDateWithSuffix(dateString) {
 
 // Home route
 app.get("/", (req, res) => {
-  res.render("index", { weather: null, error: null });
+  res.render("index", { forecast: null, city: null, error: null });
 });
 
 //POST route
