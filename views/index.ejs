@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <title>API Capstone</title>
-    <link rel="stylesheet" href="/main.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <h1>Weather App Capstone</h1>
@@ -11,16 +15,18 @@
       <input type="text" name="city" placeholder="Enter city" />
       <button type="submit">Get Weather</button>
     </form>
-    <% if (locals.forecast) { %>
-    <h2>7-day forecast for <%= city %></h2>
-    <div class="card-container">
+    <% if (forecast) { %>
+    <h2>7-day forecast for <b><%= city %></b></h2>
+    <div class="forecast-cards">
       <% forecast.forEach(day => { %>
       <div class="weather-card">
-        <h3><%= day.date %> <i class="material-icons"><%= day.icon %></i></h3>
-        <p>High: <%= day.temp_max %>°C</p>
-        <p>Low: <%= day.temp_min %>°C</p>
-        <p>Precipitation: <%= day.precipitation %> mm</p>
-        <p>Weather code: <%= day.weather_code %></p>
+        <div class="card-header"><%= day.date %></div>
+        <img src="<%= day.iconUrl %>" alt="Weather icon" class="weather-svg" />
+        <div class="weather-info">
+          <p>High: <%= day.temp_max %>°C</p>
+          <p>Low: <%= day.temp_min %>°C</p>
+          <p>Precipitation: <%= day.precipitation %> mm</p>
+        </div>
       </div>
       <% }) %>
     </div>

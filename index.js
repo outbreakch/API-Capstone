@@ -2,7 +2,7 @@ import express from "express";
 import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getWeatherIconName } from "./weatherIcons.js";
+import { getWeatherIconSVG } from "./weatherIcons.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -15,6 +15,35 @@ app.use(express.urlencoded({ extended: true }));
 // Set view engine to EJS
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+function formatLongDateWithSuffix(dateString) {
+  const date = new Date(dateString);
+
+  // Get weekday, month, year separately
+  const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
+  const month = date.toLocaleDateString("en-US", { month: "long" });
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  // Get the ordinal suffix
+  const getOrdinal = (n) => {
+    if (n > 3 && n < 21) return "th";
+    switch (n % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+  const ordinalDay = day + getOrdinal(day);
+
+  // Combine parts in the correct order
+  return `${weekday}, ${month} ${ordinalDay}, ${year}`;
+}
 
 // Home route
 app.get("/", (req, res) => {
@@ -44,12 +73,14 @@ app.post("/", async (req, res) => {
     const daily = weatherResponse.data.daily;
 
     const forecastArray = daily.time.map((date, i) => ({
-      date: date,
+      date: formatLongDateWithSuffix(date),
       temp_max: daily.temperature_2m_max[i],
       temp_min: daily.temperature_2m_min[i],
       precipitation: daily.precipitation_sum[i],
       weather_code: daily.weathercode[i],
-      icon: getWeatherIconName(daily.weathercode[i], 1),
+      iconUrl: `assets/images/weathericons/${getWeatherIconSVG(
+        daily.weathercode[i]
+      )}`,
     })); // 7-day forecast
 
     console.log(forecastArray);
