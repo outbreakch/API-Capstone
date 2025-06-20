@@ -126,17 +126,44 @@ body {
     font-size: 2.3rem;
   }
 }
+footer {
+  background: var(--color-card, #dcd6f7);
+  color: var(--color-header, #424874);
+  border-top: 2px solid var(--color-border, #a6b1e1);
+  position: relative; /* for absolute positioning child */
+}
+.footer .container {
+  padding: 1rem 0;
+}
+
+.footer-text {
+  font-size: 1.1em;
+}
 
 .footer-heart {
   color: var(--color-accent, #a6b1e1);
   font-size: 1.2em;
   vertical-align: middle;
 }
-.footer {
-  background: var(--color-card, #dcd6f7);
-  color: var(--color-header, #424874);
-  border-top: 2px solid var(--color-border, #a6b1e1);
+
+/* GitHub icon floating all the way right, vertically centered */
+.github-link-abs {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-accent, #a6b1e1);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
 }
-.footer .container {
-  padding: 1rem 0;
+
+.github-link-abs:hover svg {
+  color: var(--color-header, #424874);
+}
+
+.github-link-abs svg {
+  display: block;
+  width: 32px;
+  height: 32px;
 }
