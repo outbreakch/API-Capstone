@@ -61,6 +61,7 @@
             <p>High: <%= day.temp_max %>°C</p>
             <p>Low: <%= day.temp_min %>°C</p>
             <p>Precipitation: <%= day.precipitation %> mm</p>
+            <p>Humidex: <%= day.humidex !== null ? day.humidex : "N/A" %></p>
           </div>
         </div>
         <% }) %>
