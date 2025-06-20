@@ -6,11 +6,11 @@ import { getWeatherIconSVG } from "../weatherIcons.js"; // adjust path if needed
 const router = express.Router();
 
 function formatLongDateWithSuffix(dateString) {
-  const date = new Date(dateString);
+  // Parse as local, not UTC
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year, month - 1, day); // JS months are 0-indexed!
   const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
-  const month = date.toLocaleDateString("en-US", { month: "long" });
-  const day = date.getDate();
-  const year = date.getFullYear();
+  const monthName = date.toLocaleDateString("en-US", { month: "long" });
   const getOrdinal = (n) => {
     if (n > 3 && n < 21) return "th";
     switch (n % 10) {
@@ -25,7 +25,7 @@ function formatLongDateWithSuffix(dateString) {
     }
   };
   const ordinalDay = day + getOrdinal(day);
-  return `${weekday}, ${month} ${ordinalDay}, ${year}`;
+  return `${weekday}, ${monthName} ${ordinalDay}, ${year}`;
 }
 
 function capitalizeWords(str) {
@@ -77,10 +77,14 @@ router.post("/", async (req, res) => {
     const weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=${cityLat}&longitude=${cityLon}&model=gem&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&hourly=temperature_2m,relative_humidity_2m&forecast_days=7&timezone=auto`;
     const weatherResponse = await axios.get(weatherURL);
     const daily = weatherResponse.data.daily;
+
     const hourly = weatherResponse.data.hourly;
 
     // Group hourly data by date for 7 days
-    const forecastArray = daily.time.map((date, i) => {
+    const todayISO = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+
+    // 1. Build the full array
+    let forecastArray = daily.time.map((date, i) => {
       // Find all hourly indexes for this day
       const hourlyIndexes = [];
       for (let j = 0; j < hourly.time.length; j++) {
@@ -110,9 +114,21 @@ router.post("/", async (req, res) => {
         iconUrl: `assets/images/weathericons/${getWeatherIconSVG(
           daily.weathercode[i]
         )}`,
+        rawDate: date, // keep for filtering
       };
     });
 
+    // 2. Filter out any days before today
+    forecastArray = forecastArray
+      .filter((day) => day.rawDate >= todayISO)
+      .slice(0, 7);
+    console.log("API daily.time:", daily.time); // Dates returned by the API
+    console.log("Server UTC today:", todayISO); // What your server thinks today is (in UTC)
+    console.log("daily.timezone:", weatherResponse.data.timezone); // The timezone API used (should match your location)
+    console.log(
+      "ForecastArray:",
+      forecastArray.map((d) => d.rawDate)
+    );
     res.render("index", {
       forecast: forecastArray,
       city: displayLocation,
