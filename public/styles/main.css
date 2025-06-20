@@ -83,7 +83,9 @@ body {
   flex-direction: column;
   align-items: center;
   border: 2px solid var(--color-border);
-  transition: box-shadow 0.2s;
+  opacity: 0;
+  transform: translateY(20px); /* slide up slightly */
+  transition: none; /* disables normal transition for instant render */
 }
 .weather-card:hover {
   box-shadow: 0 4px 24px rgba(66, 72, 116, 0.13);
@@ -166,4 +168,18 @@ footer {
   display: block;
   width: 32px;
   height: 32px;
+}
+/* Animation for reveal */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.weather-card.reveal {
+  animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
