@@ -1,29 +1,33 @@
-/* public/styles/suggest.css */
+.input-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
 
 .suggestion-box {
+  display: none;
   position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
   background: #fff;
-  border: 1px solid #bbb;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 2px solid var(--color-accent, #a6b1e1);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(166, 177, 225, 0.1);
   z-index: 99;
-  margin-top: 2px;
-  min-width: 240px;
-  max-height: 200px;
-  overflow-y: auto;
+  font-size: 1.2rem;
 }
+
+.suggestion-box.active {
+  display: block;
+}
+
 .suggestion {
-  padding: 0.5em 1em;
+  padding: 0.75em 1.25em;
   cursor: pointer;
+  font-family: "Anonymous Pro", monospace, sans-serif;
 }
+
 .suggestion:hover {
-  background: #e3e3e3;
-}
-form {
-  position: relative;
-}
-.suggestion-box:empty {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
+  background: var(--color-bg, #f4eeff);
 }

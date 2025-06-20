@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   const input = document.querySelector('input[name="city"]');
+  const inputWrap = input.parentNode; // .input-wrap
   const suggestionBox = document.createElement("div");
   suggestionBox.className = "suggestion-box";
-  input.parentNode.appendChild(suggestionBox);
+  inputWrap.appendChild(suggestionBox);
 
   let timeout;
   input.addEventListener("input", function () {
@@ -10,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const value = input.value.trim();
     if (value.length < 2) {
       suggestionBox.innerHTML = "";
-      suggestionBox.classList.remove("active"); // <<< ADDED
+      suggestionBox.classList.remove("active");
       return;
     }
     timeout = setTimeout(async () => {
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
       suggestionBox.innerHTML = "";
 
       if (suggestions.length > 0) {
-        suggestionBox.classList.add("active"); // <<< ADDED
+        suggestionBox.classList.add("active");
         suggestions.forEach((s) => {
           const div = document.createElement("div");
           div.className = "suggestion";
@@ -27,12 +28,12 @@ document.addEventListener("DOMContentLoaded", function () {
           div.addEventListener("mousedown", () => {
             input.value = s.name;
             suggestionBox.innerHTML = "";
-            suggestionBox.classList.remove("active"); // <<< ADDED
+            suggestionBox.classList.remove("active");
           });
           suggestionBox.appendChild(div);
         });
       } else {
-        suggestionBox.classList.remove("active"); // <<< ADDED
+        suggestionBox.classList.remove("active");
       }
     }, 200);
   });
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("click", (e) => {
     if (!suggestionBox.contains(e.target) && e.target !== input) {
       suggestionBox.innerHTML = "";
-      suggestionBox.classList.remove("active"); // <<< ADDED
+      suggestionBox.classList.remove("active");
     }
   });
 });
